@@ -133,6 +133,14 @@ if __name__ == "__main__":
     )
     parser.add_argument("--use_attention_mask", action="store_true", help="Whether to use attention mask")
 
+    parser.add_argument("--save_preds", action="store_true", help="Whether to save wrong predictions to a file.")
+    parser.add_argument(
+        "--preds_output_dir",
+        default="./preds",
+        type=str,
+        help="The output directory to save wrong prediction files.",
+    )
+    
     args = parser.parse_args()
 
     args.model_name_or_path = MODEL_PATH_MAP[args.model_type]

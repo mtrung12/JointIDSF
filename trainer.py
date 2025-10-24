@@ -192,6 +192,9 @@ class Trainer(object):
         out_intent_label_ids = None
         out_slot_labels_ids = None
 
+        all_input_ids = None
+        all_attention_masks = None
+        
         self.model.eval()
 
         for batch in tqdm(eval_dataloader, desc="Evaluating"):
@@ -211,6 +214,15 @@ class Trainer(object):
                 eval_loss += tmp_eval_loss.mean().item()
             nb_eval_steps += 1
 
+            if all_input_ids is None:
+                all_input_ids = inputs["input_ids"].detach().cpu().numpy()
+                all_attention_masks = inputs["attention_mask"].detach().cpu().numpy()
+            else:
+                all_input_ids = np.append(all_input_ids, inputs["input_ids"].detach().cpu().numpy(), axis=0)
+                all_attention_masks = np.append(
+                    all_attention_masks, inputs["attention_mask"].detach().cpu().numpy(), axis=0
+                )
+            
             # Intent prediction
             if intent_preds is None:
                 intent_preds = intent_logits.detach().cpu().numpy()
@@ -269,6 +281,55 @@ class Trainer(object):
             self.write_evaluation_result("eval_test_results.txt", results)
         elif mode == "dev":
             self.write_evaluation_result("eval_dev_results.txt", results)
+            
+        if hasattr(self.args, 'save_preds') and self.args.save_preds:
+            output_file_path = os.path.join(self.args.preds_output_dir, f"wrong_preds_{mode}.txt")
+            wrong_count = 0
+            wrong_examples_output = []
+
+            for i in range(len(intent_preds)):
+                intent_pred_label = self.intent_label_lst[intent_preds[i]]
+                intent_true_label = self.intent_label_lst[out_intent_label_ids[i]]
+
+                slot_pred_str = " ".join(slot_preds_list[i])
+                slot_true_str = " ".join(out_slot_label_list[i])
+
+                is_wrong = False
+                if intent_pred_label != intent_true_label:
+                    is_wrong = True
+                if slot_pred_str != slot_true_str:
+                    is_wrong = True
+
+                if is_wrong:
+                    wrong_count += 1
+                    # Get the original input_ids and attention_mask for this example
+                    current_input_ids = all_input_ids[i]
+                    current_mask = all_attention_masks[i]
+
+                    # Filter input_ids based on the attention mask (only keep non-padded tokens)
+                    filtered_ids = [
+                        int(current_input_ids[j])
+                        for j in range(len(current_input_ids))
+                        if current_mask[j] == 1
+                    ]
+
+                    # Format the output string
+                    output_str = f"Example {wrong_count}\n"
+                    output_str += f"Input IDs: {filtered_ids}\n"
+                    output_str += f"Intent Pred: {intent_pred_label} (True: {intent_true_label})\n"
+                    output_str += f"Slot Pred: {slot_pred_str}\n"
+                    output_str += f"Slot True: {slot_true_str}\n"
+                    output_str += "----------------------------------------\n"
+                    wrong_examples_output.append(output_str)
+
+            # Write all wrong examples to the file
+            with open(output_file_path, "w", encoding="utf-8") as f:
+                f.write(f"***** Wrong Predictions ({mode.upper()} Set) *****\n")
+                f.write(f"Total wrong examples: {wrong_count}\n")
+                f.write("========================================\n\n")
+                f.writelines(wrong_examples_output)
+
+            logger.info(f"Saved {wrong_count} wrong predictions to {output_file_path}")
         return results
 
     def save_model(self):
