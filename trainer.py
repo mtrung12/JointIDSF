@@ -64,8 +64,8 @@ class Trainer(object):
         else:
             t_total = len(train_dataloader) // self.args.gradient_accumulation_steps * self.args.num_train_epochs
         print("check init")
-        results = self.evaluate("dev")
-        print(results)
+        # results = self.evaluate("dev")
+        # print(results)
         # Prepare optimizer and schedule (linear warmup and decay)
         no_decay = ["bias", "LayerNorm.weight"]
         optimizer_grouped_parameters = [
