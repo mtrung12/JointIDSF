@@ -284,6 +284,7 @@ class Trainer(object):
             
         if hasattr(self.args, 'save_preds') and self.args.save_preds:
             output_file_path = os.path.join(self.args.preds_output_dir, f"wrong_preds_{mode}.txt")
+            os.makedirs(self.args.preds_output_dir, exist_ok=True)
             wrong_count = 0
             wrong_examples_output = []
 
