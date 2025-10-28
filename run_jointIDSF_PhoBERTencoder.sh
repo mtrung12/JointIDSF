@@ -15,6 +15,8 @@ python3 main.py --token_level word-level \
                   --seed $s \
                   --do_train \
                   --do_eval \
+                  --save_preds \
+                  --preds_output_dir ./preds \
                   --save_steps 140 \
                   --logging_steps 140 \
                   --num_train_epochs 50 \
