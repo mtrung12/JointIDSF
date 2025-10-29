@@ -1,8 +1,8 @@
 #As we initialize JointIDSF from JointBERT, user need to train a base model JointBERT first
 ./run_jointBERT-CRF_XLM-Rencoder.sh
 #Train JointIDSF
-export lr=3e-5
-export c=0.25
+export lr=4e-5
+export c=0.6
 export s=10
 echo "${lr}"
 export MODEL_DIR=JointIDSF_XLM-Rencoder
@@ -12,6 +12,7 @@ python3 main.py --token_level syllable-level \
                   --model_type xlmr \
                   --model_dir $MODEL_DIR \
                   --data_dir PhoATIS \
+                  --train_batch_size 16 \
                   --seed $s \
                   --do_train \
                   --do_eval \
