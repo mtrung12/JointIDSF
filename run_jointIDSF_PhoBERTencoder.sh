@@ -2,7 +2,7 @@
 ./run_jointBERT-CRF_PhoBERTencoder.sh
 #Train JointIDSF
 export lr=4e-5
-export c=0.15
+export c=0.6
 export s=100
 echo "${lr}"
 export MODEL_DIR=JointIDSF_PhoBERTencoder
@@ -12,6 +12,7 @@ python3 main.py --token_level word-level \
                   --model_type phobert \
                   --model_dir $MODEL_DIR \
                   --data_dir PhoATIS \
+                  --train_batch_size 16 \
                   --seed $s \
                   --do_train \
                   --do_eval \
@@ -19,7 +20,7 @@ python3 main.py --token_level word-level \
                   --preds_output_dir ./preds \
                   --save_steps 140 \
                   --logging_steps 140 \
-                  --num_train_epochs 50 \
+                  --num_train_epochs 10 \
                   --tuning_metric mean_intent_slot \
                   --use_intent_context_attention \
                   --attention_embedding_size 200 \
@@ -28,5 +29,6 @@ python3 main.py --token_level word-level \
                   --embedding_type soft \
                   --intent_loss_coef $c \
                   --pretrained \
+                  --dropout_rate 0.3 \
                   --pretrained_path JointBERT-CRF_PhoBERTencoder/3e-5/0.6/100 \
                   --learning_rate $lr
