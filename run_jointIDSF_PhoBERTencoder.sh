@@ -29,6 +29,6 @@ python3 main.py --token_level word-level \
                   --embedding_type soft \
                   --intent_loss_coef $c \
                   --pretrained \
-                  --dropout_rate 0.3 \
+                  --dropout_rate 0.5 \
                   --pretrained_path JointBERT-CRF_PhoBERTencoder/3e-5/0.6/100 \
                   --learning_rate $lr
