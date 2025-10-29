@@ -34,7 +34,7 @@ for lr in "${lrs[@]}"; do
         --preds_output_dir ./preds \
         --save_steps 140 \
         --logging_steps 140 \
-        --num_train_epochs 50 \
+        --num_train_epochs 10 \
         --tuning_metric mean_intent_slot \
         --use_intent_context_attention \
         --attention_embedding_size 200 \
