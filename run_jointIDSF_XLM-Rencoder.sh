@@ -18,7 +18,7 @@ python3 main.py --token_level syllable-level \
                   --do_eval \
                   --save_steps 140 \
                   --logging_steps 140 \
-                  --num_train_epochs 50 \
+                  --num_train_epochs 10 \
                   --tuning_metric mean_intent_slot \
                   --use_intent_context_attention \
                   --attention_embedding_size 200 \
@@ -28,4 +28,5 @@ python3 main.py --token_level syllable-level \
                   --intent_loss_coef $c \
                   --pretrained \
                   --pretrained_path JointBERT-CRF_XLM-Rencoder/4e-5/0.45/10 \
+                  --dropout_rate 0.1 \
                   --learning_rate $lr
