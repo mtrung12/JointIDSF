@@ -20,7 +20,7 @@ python3 main.py --token_level word-level \
                   --preds_output_dir ./preds \
                   --save_steps 140 \
                   --logging_steps 140 \
-                  --num_train_epochs 10 \
+                  --num_train_epochs 50 \
                   --tuning_metric mean_intent_slot \
                   --use_intent_context_attention \
                   --attention_embedding_size 200 \
@@ -29,6 +29,6 @@ python3 main.py --token_level word-level \
                   --embedding_type soft \
                   --intent_loss_coef $c \
                   --pretrained \
-                  --dropout_rate 0.5 \
+                  --dropout_rate 0.1 \
                   --pretrained_path JointBERT-CRF_PhoBERTencoder/3e-5/0.6/100 \
                   --learning_rate $lr
