@@ -28,5 +28,5 @@ python3 main.py --token_level syllable-level \
                   --intent_loss_coef $c \
                   --pretrained \
                   --pretrained_path JointBERT-CRF_XLM-Rencoder/4e-5/0.45/10 \
-                  --dropout_rate 0.1 \
+                  --dropout_rate 0.3 \
                   --learning_rate $lr
